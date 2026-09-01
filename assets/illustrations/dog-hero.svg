@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" role="img" aria-label="Dog illustration">
+  
+
+  
+  <path d="M210 28 C 290 28 360 90 348 170 C 336 250 250 295 170 286 C 90 277 42 215 56 130 C 70 60 140 28 210 28 Z" fill="#FFF6E9"></path>
+
+  <g stroke="#1F1B2E" stroke-linecap="round" stroke-linejoin="round">
+    
+    <ellipse cx="116" cy="180" rx="34" ry="60" transform="rotate(-12 116 180)" fill="#C49A5A" stroke-width="2.5"></ellipse>
+    <ellipse cx="284" cy="180" rx="34" ry="60" transform="rotate(12 284 180)" fill="#C49A5A" stroke-width="2.5"></ellipse>
+
+    
+    <ellipse cx="200" cy="170" rx="84" ry="78" fill="#E8C078" stroke-width="2.5"></ellipse>
+
+    
+    <ellipse cx="200" cy="200" rx="36" ry="26" fill="#FFF6E9" stroke-width="2"></ellipse>
+
+    
+    <ellipse cx="200" cy="190" rx="10" ry="7" fill="#1F1B2E"></ellipse>
+    
+    <circle cx="196" cy="187" r="2" fill="#FFF6E9"></circle>
+
+    
+    <circle cx="168" cy="158" r="6" fill="#1F1B2E"></circle>
+    <circle cx="166" cy="156" r="2" fill="#FFF6E9"></circle>
+    <circle cx="232" cy="158" r="6" fill="#1F1B2E"></circle>
+    <circle cx="230" cy="156" r="2" fill="#FFF6E9"></circle>
+
+    
+    <path d="M 200 200 Q 188 214 178 206" stroke-width="2" fill="none"></path>
+    <path d="M 200 200 Q 212 214 222 206" stroke-width="2" fill="none"></path>
+  </g>
+</svg>

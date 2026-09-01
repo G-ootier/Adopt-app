@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Adopt stacked logo">
+  
+  <g transform="translate(72 16)">
+    <circle cx="48" cy="48" r="46" fill="currentColor"></circle>
+    <g fill="#FFF6E9" transform="translate(48 52)">
+      <ellipse cx="0" cy="8" rx="16" ry="13"></ellipse>
+      <ellipse cx="-18" cy="-6" rx="6" ry="8" transform="rotate(-18)"></ellipse>
+      <ellipse cx="-7" cy="-18" rx="6" ry="8" transform="rotate(-8)"></ellipse>
+      <ellipse cx="7" cy="-18" rx="6" ry="8" transform="rotate(8)"></ellipse>
+      <ellipse cx="18" cy="-6" rx="6" ry="8" transform="rotate(18)"></ellipse>
+    </g>
+  </g>
+  
+  <text x="120" y="180" text-anchor="middle" fill="currentColor" style="font-family: &#39;Sora&#39;, system-ui, sans-serif;&#xA;               font-weight: 800; font-size: 56px; letter-spacing: -0.04em;">
+    Adopt
+  </text>
+  <text x="120" y="216" text-anchor="middle" fill="currentColor" opacity="0.55" style="font-family: &#39;DM Sans&#39;, system-ui, sans-serif;&#xA;               font-weight: 500; font-size: 16px; letter-spacing: 0.04em;">
+    your future bestie · eu
+  </text>
+</svg>

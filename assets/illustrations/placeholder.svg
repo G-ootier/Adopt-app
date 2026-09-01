@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" role="img" aria-label="Placeholder slot for illustration">
+  
+  <rect x="6" y="6" width="388" height="308" rx="24" ry="24" fill="#FFF6E9" stroke="#FF7A4F" stroke-width="2.5" stroke-dasharray="8 8"></rect>
+  <g transform="translate(200 160)" text-anchor="middle" font-family="DM Sans, system-ui, sans-serif">
+    
+    <g transform="translate(0 -42)" fill="#FF7A4F">
+      <ellipse cx="0" cy="6" rx="14" ry="11"></ellipse>
+      <ellipse cx="-16" cy="-6" rx="5" ry="7" transform="rotate(-18)"></ellipse>
+      <ellipse cx="-6" cy="-15" rx="5" ry="7" transform="rotate(-6)"></ellipse>
+      <ellipse cx="6" cy="-15" rx="5" ry="7" transform="rotate(6)"></ellipse>
+      <ellipse cx="16" cy="-6" rx="5" ry="7" transform="rotate(18)"></ellipse>
+    </g>
+    <text y="6" font-size="16" font-weight="600" fill="#1F1B2E">Illustration goes here</text>
+    <text y="28" font-size="13" fill="#4D4458">See VISUAL FOUNDATIONS → Illustration style</text>
+  </g>
+</svg>

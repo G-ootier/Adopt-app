@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" role="img" aria-label="Empty swipe deck — out of pets nearby">
+  
+  <path d="M210 30 C 290 30 350 90 340 170 C 330 250 250 295 170 286 C 90 277 50 215 60 130 C 70 60 140 30 210 30 Z" fill="#FFF6E9"></path>
+
+  <g stroke="#1F1B2E" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    
+    <circle cx="170" cy="155" r="68" fill="#FFFFFF" stroke-width="2.5"></circle>
+    <line x1="222" y1="200" x2="280" y2="252" stroke-width="10"></line>
+    <line x1="222" y1="200" x2="280" y2="252" stroke="#FF7A4F" stroke-width="6"></line>
+
+    
+    <circle cx="170" cy="155" r="46" stroke-dasharray="3 5" stroke-width="1.5" stroke="#5E8C73"></circle>
+    <circle cx="170" cy="155" r="26" stroke-dasharray="3 5" stroke-width="1.5" stroke="#5E8C73"></circle>
+    
+    <path d="M170 145 C 162 145 158 153 162 161 L 170 173 L 178 161 C 182 153 178 145 170 145 Z" fill="#FF7A4F" stroke-width="2"></path>
+    <circle cx="170" cy="155" r="3" fill="#FFF6E9"></circle>
+  </g>
+
+  
+  <g stroke="#5E8C73" stroke-width="1.5" fill="none" stroke-linecap="round">
+    <path d="M90 80 Q 96 74 102 80"></path>
+    <path d="M310 100 Q 316 94 322 100"></path>
+    <path d="M86 230 Q 92 224 98 230"></path>
+    <path d="M320 220 L 320 228 M 316 224 L 324 224"></path>
+  </g>
+</svg>
