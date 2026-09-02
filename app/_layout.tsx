@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from '../lib/auth';
+import { InstallPrompt } from '../components/InstallPrompt';
 import '../global.css';
 
 import {
@@ -51,6 +52,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
         <StatusBar style="dark" />
+        <InstallPrompt />
         <Slot />
       </AuthProvider>
     </GestureHandlerRootView>

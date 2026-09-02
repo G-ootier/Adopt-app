@@ -45,6 +45,7 @@ export default function SwipeScreen() {
   lastSwipedRef.current = lastSwiped;
   const [matchPet, setMatchPet] = useState<Pet | null>(null);
   const [locationDenied, setLocationDenied] = useState(false);
+  const [deckError, setDeckError] = useState<string | null>(null);
   const [swipeCount, setSwipeCount] = useState(0);
   const [showAd, setShowAd] = useState(false);
 
@@ -92,7 +93,7 @@ export default function SwipeScreen() {
   // ── Fetch deck when filters are ready or change ───────────
   const loadDeck = useCallback(async () => {
     setIsLoading(true);
-    const data = await fetchDeck({
+    const { pets: data, error } = await fetchDeck({
       adopterId: user?.id,
       latitude: filters.latitude,
       longitude: filters.longitude,
@@ -102,6 +103,7 @@ export default function SwipeScreen() {
       ageMin: filters.age_min,
       ageMax: filters.age_max,
     });
+    setDeckError(error);
 
     // Prefetch first two card images so they don't flash grey
     const prefetchUrls = data
@@ -336,6 +338,31 @@ export default function SwipeScreen() {
             }}
           >
             Location unavailable — showing animals near Paris
+          </Text>
+        </View>
+      )}
+
+      {/* Deck error notice — distinguishes a broken query from an empty deck */}
+      {deckError && (
+        <View
+          style={{
+            backgroundColor: '#F9E0E0',
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 8,
+            marginHorizontal: 16,
+            marginBottom: 4,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: 'DMSans-Medium',
+              fontSize: 12,
+              color: '#C84D4D',
+              textAlign: 'center',
+            }}
+          >
+            Couldn’t load animals: {deckError}
           </Text>
         </View>
       )}

@@ -13,6 +13,11 @@ interface FetchDeckParams {
   limit?: number;
 }
 
+export interface DeckResult {
+  pets: Pet[];
+  error: string | null;
+}
+
 export async function fetchDeck({
   adopterId,
   latitude,
@@ -23,7 +28,7 @@ export async function fetchDeck({
   ageMin = null,
   ageMax = null,
   limit = 20,
-}: FetchDeckParams): Promise<Pet[]> {
+}: FetchDeckParams): Promise<DeckResult> {
   const { data, error } = await supabase.rpc('get_swipe_deck', {
     p_user_id: adopterId ?? null,
     p_lat: latitude,
@@ -38,11 +43,13 @@ export async function fetchDeck({
   });
 
   if (error) {
-    console.warn('fetchDeck error:', error.message);
-    return [];
+    // Surface the real cause instead of masking it as an empty deck — this is
+    // the difference between "no animals nearby" and a broken query/permission.
+    console.error('fetchDeck error:', error.message, error);
+    return { pets: [], error: error.message };
   }
 
-  return (data as Pet[]) ?? [];
+  return { pets: (data as Pet[]) ?? [], error: null };
 }
 
 export function formatAge(months: number): string {
