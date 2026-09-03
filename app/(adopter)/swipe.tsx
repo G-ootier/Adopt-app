@@ -210,8 +210,11 @@ export default function SwipeScreen() {
   }, [pets, handleSwipeRight]);
 
   // ── Expand radius ─────────────────────────────────────────
+  // Open the filter sheet so the user can set the search radius directly,
+  // rather than silently bumping it (which looks like nothing happened when
+  // there are still no animals in range).
   const handleExpandRadius = useCallback(() => {
-    setFilters((prev) => ({ ...prev, radius_km: prev.radius_km + 20 }));
+    sheetRef.current?.snapToIndex(0);
   }, []);
 
   // ── Match overlay ─────────────────────────────────────────
