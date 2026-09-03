@@ -105,15 +105,19 @@ export default function SwipeScreen() {
     });
     setDeckError(error);
 
-    // Prefetch first two card images so they don't flash grey
-    const prefetchUrls = data
-      .slice(0, 2)
-      .map((p) => p.photos?.[0])
-      .filter(Boolean) as string[];
-    await Promise.all(prefetchUrls.map((url) => Image.prefetch(url)));
-
+    // Show the deck immediately — don't block first paint on image prefetch.
     setPets(data);
     setIsLoading(false);
+
+    // Warm the cache in the background: every photo of the first few cards, so
+    // tapping between photos and advancing to the next card is instant.
+    const prefetchUrls = data
+      .slice(0, 3)
+      .flatMap((p) => p.photos ?? [])
+      .filter(Boolean) as string[];
+    prefetchUrls.forEach((url) => {
+      Image.prefetch(url);
+    });
   }, [user?.id, filters]);
 
   useEffect(() => {

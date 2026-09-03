@@ -19,8 +19,6 @@ import {
   Mail,
   Globe,
   CheckCircle,
-  ChevronLeft,
-  ChevronRight,
   Heart,
 } from 'lucide-react-native';
 import { supabase } from '../../../lib/supabase';
@@ -149,50 +147,56 @@ export default function PetDetailScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#FFF6E9' }} showsVerticalScrollIndicator={false}>
-      {/* Photo carousel */}
+      {/* Photo carousel — swipe left/right */}
       <View style={{ width: screenWidth, height: screenWidth * 1.2, position: 'relative' }}>
-        <Image
-          source={{ uri: photos[photoIndex] }}
-          style={{ width: '100%', height: '100%' }}
-          contentFit="cover"
-          transition={200}
-        />
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={(e) => {
+            const i = Math.round(e.nativeEvent.contentOffset.x / screenWidth);
+            if (i !== photoIndex) setPhotoIndex(i);
+          }}
+          scrollEventThrottle={16}
+        >
+          {photos.map((uri, i) => (
+            <Image
+              key={uri + i}
+              source={{ uri }}
+              style={{ width: screenWidth, height: '100%' }}
+              contentFit="cover"
+              transition={0}
+              cachePolicy="memory-disk"
+              priority={i === 0 ? 'high' : 'normal'}
+            />
+          ))}
+        </ScrollView>
+
         <LinearGradient
           colors={['rgba(31,27,46,0.3)', 'transparent', 'rgba(255,246,233,1)']}
           locations={[0, 0.5, 1]}
           style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+          pointerEvents="none"
         />
 
-        {/* Photo nav */}
+        {/* Dots */}
         {photos.length > 1 && (
-          <>
-            <Pressable
-              onPress={() => setPhotoIndex((i) => Math.max(0, i - 1))}
-              style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: screenWidth * 0.3, justifyContent: 'center', paddingLeft: 12 }}
-            >
-              {photoIndex > 0 && <ChevronLeft size={28} color="rgba(255,255,255,0.8)" />}
-            </Pressable>
-            <Pressable
-              onPress={() => setPhotoIndex((i) => Math.min(photos.length - 1, i + 1))}
-              style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: screenWidth * 0.3, justifyContent: 'center', alignItems: 'flex-end', paddingRight: 12 }}
-            >
-              {photoIndex < photos.length - 1 && <ChevronRight size={28} color="rgba(255,255,255,0.8)" />}
-            </Pressable>
-            {/* Dots */}
-            <View style={{ position: 'absolute', top: 60, left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', gap: 6 }}>
-              {photos.map((_, i) => (
-                <View
-                  key={i}
-                  style={{
-                    width: i === photoIndex ? 20 : 6,
-                    height: 6,
-                    borderRadius: 3,
-                    backgroundColor: i === photoIndex ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
-                  }}
-                />
-              ))}
-            </View>
-          </>
+          <View
+            style={{ position: 'absolute', top: 60, left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', gap: 6 }}
+            pointerEvents="none"
+          >
+            {photos.map((_, i) => (
+              <View
+                key={i}
+                style={{
+                  width: i === photoIndex ? 20 : 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: i === photoIndex ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
+                }}
+              />
+            ))}
+          </View>
         )}
 
         {/* Crush overlay — subtle orange tint fading down with label */}

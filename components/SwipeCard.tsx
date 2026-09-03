@@ -32,9 +32,14 @@ export function SwipeCard({ pet, translateX, isTop, onTapDetail }: SwipeCardProp
       ? pet.photos.filter((p) => p && p.length > 0)
       : [];
 
-  const photo = photos.length > 0
-    ? photos[photoIndex % photos.length]
-    : 'https://placehold.co/400x540/FFF6E9/FF7A4F?text=No+Photo';
+  const displayPhotos =
+    photos.length > 0
+      ? photos
+      : ['https://placehold.co/400x540/FFF6E9/FF7A4F?text=No+Photo'];
+
+  // The top card renders every photo stacked so tapping between them is
+  // instant (all decoded up front). Cards behind only need their first photo.
+  const renderedPhotos = isTop ? displayPhotos : displayPhotos.slice(0, 1);
 
   const traits: string[] = [];
   if (pet.breed) traits.push(pet.breed);
@@ -71,15 +76,24 @@ export function SwipeCard({ pet, translateX, isTop, onTapDetail }: SwipeCardProp
         elevation: 6,
       }}
     >
-      {/* Photo */}
-      <Image
-        source={{ uri: photo }}
-        style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: '#FFF6E9' }}
-        contentFit="cover"
-        transition={0}
-        cachePolicy="memory-disk"
-        priority={isTop ? 'high' : 'normal'}
-      />
+      {/* Photos — stacked, visibility toggled by opacity for instant switching */}
+      {renderedPhotos.map((uri, i) => (
+        <Image
+          key={uri + i}
+          source={{ uri }}
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            backgroundColor: '#FFF6E9',
+            opacity: i === photoIndex ? 1 : 0,
+          }}
+          contentFit="cover"
+          transition={0}
+          cachePolicy="memory-disk"
+          priority={isTop && i === 0 ? 'high' : 'normal'}
+        />
+      ))}
 
       {/* Gradient overlay */}
       <LinearGradient
