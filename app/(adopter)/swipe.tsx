@@ -344,7 +344,7 @@ export default function SwipeScreen() {
               textAlign: 'center',
             }}
           >
-            Location unavailable — showing animals near Paris
+            Location unavailable. Showing animals near Paris
           </Text>
         </View>
       )}

@@ -7,11 +7,13 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Pressable,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MapPin, PawPrint, Heart } from 'lucide-react-native';
 import { useAuth } from '../lib/auth';
 import { Button } from '../components/ui';
+import { DesktopLanding } from '../components/DesktopLanding';
 
 type Slide = {
   icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
@@ -31,7 +33,7 @@ const SLIDES: Slide[] = [
     icon: MapPin,
     tint: '#5E8C73',
     title: 'Rescues near you',
-    body: 'Every profile is a real animal waiting at a nearby shelter — not a photo from a catalogue.',
+    body: 'Every profile is a real animal waiting at a nearby shelter, not a photo from a catalogue.',
   },
   {
     icon: Heart,
@@ -47,6 +49,9 @@ export default function WelcomeScreen() {
   const { width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const [index, setIndex] = useState(0);
+  // Desktop/computer visitors are steered to open the app on their phone.
+  const isDesktopWeb = Platform.OS === 'web' && width >= 1024;
+  const [continueInBrowser, setContinueInBrowser] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
@@ -61,6 +66,11 @@ export default function WelcomeScreen() {
 
   if (isLoading) return null;
   if (user && profile) return null;
+
+  // Desktop visitors get a one-screen explainer + QR to open on their phone.
+  if (isDesktopWeb && !continueInBrowser) {
+    return <DesktopLanding onContinue={() => setContinueInBrowser(true)} />;
+  }
 
   // Cap the carousel width so slides stay centered on wide/desktop screens.
   const slideWidth = Math.min(width, 480);

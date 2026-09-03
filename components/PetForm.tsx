@@ -10,7 +10,7 @@ import {
   TextInput,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system/legacy';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { decode } from 'base64-arraybuffer';
 import { Camera, X } from 'lucide-react-native';
 import { supabase } from '../lib/supabase';
@@ -104,9 +104,22 @@ export function PetForm({ initialValues, onSubmit, isLoading }: PetFormProps) {
 
       for (let i = 0; i < result.assets.length; i++) {
         const asset = result.assets[i];
-        const base64 = await FileSystem.readAsStringAsync(asset.uri, {
-          encoding: 'base64',
-        });
+        // Downscale + recompress so shelter uploads stay light (big raw phone
+        // photos were making the swipe cards slow to load).
+        const actions =
+          asset.width && asset.width > 1080
+            ? [{ resize: { width: 1080 } }]
+            : [];
+        const manipulated = await ImageManipulator.manipulateAsync(
+          asset.uri,
+          actions,
+          {
+            compress: 0.7,
+            format: ImageManipulator.SaveFormat.JPEG,
+            base64: true,
+          },
+        );
+        const base64 = manipulated.base64!;
         const path = `${shelterId}/${timestamp}-${i}.jpg`;
         const { error } = await supabase.storage
           .from('pet-photos')
