@@ -30,7 +30,13 @@ export default function ForgotPasswordScreen() {
 
     setLoading(true);
 
-    const redirectTo = Linking.createURL('/(auth)/reset-password');
+    // The route group "(auth)" is NOT part of the web URL, so linking to
+    // "/(auth)/reset-password" lands on a 404. On web we point at the real
+    // route "/reset-password"; native keeps the deep link.
+    const redirectTo =
+      Platform.OS === 'web'
+        ? `${window.location.origin}/reset-password`
+        : Linking.createURL('/reset-password');
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       email.trim(),

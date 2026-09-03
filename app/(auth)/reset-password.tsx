@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
@@ -18,6 +17,7 @@ export default function ResetPasswordScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
   async function handleUpdate() {
     setError(null);
@@ -46,9 +46,8 @@ export default function ResetPasswordScreen() {
       return;
     }
 
-    Alert.alert('Done', 'Your password has been updated.', [
-      { text: 'OK', onPress: () => router.replace('/') },
-    ]);
+    // Works across web + native (react-native-web doesn't render Alert well).
+    setDone(true);
   }
 
   return (
@@ -81,53 +80,68 @@ export default function ResetPasswordScreen() {
               marginBottom: 32,
             }}
           >
-            Choose a new password for your account.
+            {done
+              ? 'Your password has been updated. You can now sign in with it.'
+              : 'Choose a new password for your account.'}
           </Text>
 
-          <View style={{ gap: 16 }}>
-            <Input
-              label="New password"
-              placeholder="At least 6 characters"
-              secureTextEntry
-              autoComplete="new-password"
-              value={password}
-              onChangeText={setPassword}
-            />
-
-            <Input
-              label="Confirm password"
-              placeholder="Type it again"
-              secureTextEntry
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
-          </View>
-
-          {error && (
-            <Text
-              style={{
-                fontFamily: 'DMSans',
-                fontSize: 14,
-                color: '#C84D4D',
-                marginTop: 16,
-              }}
-            >
-              {error}
-            </Text>
-          )}
-
-          <View style={{ marginTop: 24 }}>
+          {done ? (
             <Button
               variant="primary"
               size="lg"
-              onPress={handleUpdate}
-              disabled={loading}
+              onPress={() => router.replace('/')}
               style={{ width: '100%' }}
             >
-              {loading ? 'Updating...' : 'Set new password'}
+              Continue
             </Button>
-          </View>
+          ) : (
+            <>
+              <View style={{ gap: 16 }}>
+                <Input
+                  label="New password"
+                  placeholder="At least 6 characters"
+                  secureTextEntry
+                  autoComplete="new-password"
+                  value={password}
+                  onChangeText={setPassword}
+                />
+
+                <Input
+                  label="Confirm password"
+                  placeholder="Type it again"
+                  secureTextEntry
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                />
+              </View>
+
+              {error && (
+                <Text
+                  style={{
+                    fontFamily: 'DMSans',
+                    fontSize: 14,
+                    color: '#C84D4D',
+                    marginTop: 16,
+                  }}
+                >
+                  {error}
+                </Text>
+              )}
+
+              <View style={{ marginTop: 24 }}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onPress={handleUpdate}
+                  disabled={loading}
+                  style={{ width: '100%' }}
+                >
+                  {loading ? 'Updating...' : 'Set new password'}
+                </Button>
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
