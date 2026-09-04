@@ -243,7 +243,7 @@ export default function AdopterProfileScreen() {
       >
         <Pressable
           onPress={() => {
-            Linking.openURL('mailto:support@adopt.eu?subject=Help%20%26%20Support');
+            Linking.openURL('mailto:support@getadopt.eu?subject=Help%20%26%20Support');
           }}
           style={{
             flexDirection: 'row',
@@ -305,7 +305,7 @@ export default function AdopterProfileScreen() {
           marginTop: 32,
         }}
       >
-        Adopt v1.0 · adopt.eu
+        Adopt Beta · getadopt.eu
       </Text>
     </ScrollView>
   );
