@@ -12,6 +12,7 @@ import {
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { track } from '../../../lib/analytics';
 import {
   ArrowLeft,
   MapPin,
@@ -63,6 +64,7 @@ export default function PetDetailScreen() {
           shelter_website: s?.website,
         };
         setPet(mapped);
+        track('pet_detail_viewed', { pet_id: id });
 
         const { data: others } = await supabase
           .from('pets')
@@ -329,6 +331,7 @@ export default function PetDetailScreen() {
           {pet.shelter_address && (
             <Pressable
               onPress={() => {
+                track('contact_action_tapped', { channel: 'directions', pet_id: id });
                 const addr = encodeURIComponent(pet.shelter_address!);
                 Linking.openURL(`https://maps.apple.com/?daddr=${addr}`);
               }}
@@ -344,7 +347,10 @@ export default function PetDetailScreen() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 12 }}>
             {pet.shelter_phone && (
               <Pressable
-                onPress={() => Linking.openURL(`tel:${pet.shelter_phone}`)}
+                onPress={() => {
+                  track('contact_action_tapped', { channel: 'call', pet_id: id });
+                  Linking.openURL(`tel:${pet.shelter_phone}`);
+                }}
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#F5F3F8', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}
               >
                 <Phone size={14} color="#FF7A4F" />
@@ -353,7 +359,10 @@ export default function PetDetailScreen() {
             )}
             {pet.shelter_email && (
               <Pressable
-                onPress={() => Linking.openURL(`mailto:${pet.shelter_email}`)}
+                onPress={() => {
+                  track('contact_action_tapped', { channel: 'email', pet_id: id });
+                  Linking.openURL(`mailto:${pet.shelter_email}`);
+                }}
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#F5F3F8', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}
               >
                 <Mail size={14} color="#FF7A4F" />
@@ -362,7 +371,10 @@ export default function PetDetailScreen() {
             )}
             {pet.shelter_website && (
               <Pressable
-                onPress={() => Linking.openURL(pet.shelter_website!.startsWith('http') ? pet.shelter_website! : `https://${pet.shelter_website}`)}
+                onPress={() => {
+                  track('contact_action_tapped', { channel: 'website', pet_id: id });
+                  Linking.openURL(pet.shelter_website!.startsWith('http') ? pet.shelter_website! : `https://${pet.shelter_website}`);
+                }}
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#F5F3F8', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}
               >
                 <Globe size={14} color="#FF7A4F" />

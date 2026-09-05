@@ -3,10 +3,11 @@ import { View, Text, Pressable, Platform } from 'react-native';
 import { Tabs } from 'expo-router';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
-import { Home, User } from 'lucide-react-native';
+import { Home, Heart, User } from 'lucide-react-native';
 
 const TAB_CONFIG = [
   { name: 'animals', label: 'My animals', Icon: Home },
+  { name: 'interest', label: 'Interest', Icon: Heart },
   { name: 'profile', label: 'Profile', Icon: User },
 ] as const;
 
@@ -55,6 +56,7 @@ export default function ShelterLayout() {
   return (
     <Tabs tabBar={(props) => <FloatingTabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen name="animals" />
+      <Tabs.Screen name="interest" />
       <Tabs.Screen name="profile" />
       <Tabs.Screen name="add-pet" options={{ href: null }} />
       <Tabs.Screen name="edit-pet" options={{ href: null }} />

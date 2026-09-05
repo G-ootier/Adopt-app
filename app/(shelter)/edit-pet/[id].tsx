@@ -6,6 +6,8 @@ import { ChevronLeft, Trash2 } from 'lucide-react-native';
 import { supabase } from '../../../lib/supabase';
 import { IconButton } from '../../../components/ui';
 import { PetForm } from '../../../components/PetForm';
+import { track } from '../../../lib/analytics';
+import { recordShelterAdoption, type AdoptionSource } from '../../../lib/adoptions';
 import type { Pet } from '../../../lib/types';
 
 export default function EditPetScreen() {
@@ -17,6 +19,7 @@ export default function EditPetScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [adoptPromptOpen, setAdoptPromptOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -52,12 +55,30 @@ export default function EditPetScreen() {
         })
         .eq('id', id);
       if (error) throw error;
-      router.back();
+
+      // If this save is what marked the animal adopted, ask the one source
+      // question before leaving. Otherwise just go back.
+      const becameAdopted = data.status === 'adopted' && pet?.status !== 'adopted';
+      if (becameAdopted) {
+        track('adoption_marked', { pet_id: id });
+        setAdoptPromptOpen(true);
+      } else {
+        router.back();
+      }
     } catch (err: any) {
       Alert.alert('Error', err.message ?? 'Could not update pet.');
     } finally {
       setSaving(false);
     }
+  }
+
+  async function answerAdoptionSource(source: AdoptionSource) {
+    setAdoptPromptOpen(false);
+    if (pet) {
+      await recordShelterAdoption(id, pet.shelter_id, source);
+      track('adoption_confirmed', { pet_id: id, source });
+    }
+    router.back();
   }
 
   function confirmDelete() {
@@ -181,6 +202,61 @@ export default function EditPetScreen() {
           </Text>
         </Pressable>
       </View>
+
+      {/* Adoption source prompt — shown when the animal is newly marked adopted */}
+      {adoptPromptOpen && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(31,27,46,0.45)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 28,
+          }}
+        >
+          <View style={{ width: '100%', maxWidth: 380, backgroundColor: '#FFFFFF', borderRadius: 24, padding: 24 }}>
+            <Text style={{ fontFamily: 'Sora-Bold', fontSize: 20, color: '#1F1B2E' }}>
+              {pet ? `${pet.name} found a home! 🎉` : 'Adopted! 🎉'}
+            </Text>
+            <Text style={{ fontFamily: 'DMSans', fontSize: 15, color: '#4D4458', marginTop: 8, lineHeight: 22 }}>
+              Did the adopter find {pet ? pet.name : 'this animal'} through Adopt? This helps us measure our impact.
+            </Text>
+
+            <View style={{ marginTop: 20, gap: 10 }}>
+              {([
+                { source: 'yes' as AdoptionSource, label: 'Yes, through Adopt', primary: true },
+                { source: 'no' as AdoptionSource, label: 'No, another way', primary: false },
+                { source: 'unsure' as AdoptionSource, label: 'Not sure', primary: false },
+              ]).map((opt) => (
+                <Pressable
+                  key={opt.source}
+                  onPress={() => answerAdoptionSource(opt.source)}
+                  style={{
+                    paddingVertical: 14,
+                    borderRadius: 14,
+                    alignItems: 'center',
+                    backgroundColor: opt.primary ? '#FF7A4F' : '#F2F1F4',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: 'DMSans-SemiBold',
+                      fontSize: 15,
+                      color: opt.primary ? '#FFFFFF' : '#1F1B2E',
+                    }}
+                  >
+                    {opt.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 }

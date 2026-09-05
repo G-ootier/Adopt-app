@@ -23,6 +23,7 @@ import {
   DEFAULT_FILTERS,
 } from '../../lib/filters';
 import { getCurrentLocation } from '../../lib/location';
+import { track } from '../../lib/analytics';
 import type { Pet, SwipeDirection } from '../../lib/types';
 
 // Fallback when location permission is denied
@@ -108,6 +109,7 @@ export default function SwipeScreen() {
     // Show the deck immediately — don't block first paint on image prefetch.
     setPets(data);
     setIsLoading(false);
+    track('deck_viewed', { count: data.length });
 
     // Warm the cache in the background: every photo of the first few cards, so
     // tapping between photos and advancing to the next card is instant.
@@ -152,6 +154,7 @@ export default function SwipeScreen() {
   // ── Swipe handlers ────────────────────────────────────────
   const handleSwipeRight = useCallback(
     async (pet: Pet) => {
+      track('swipe_right', { pet_id: pet.id });
       setPets((prev) => prev.filter((p) => p.id !== pet.id));
       let swipeId: string | undefined;
       if (user) {
@@ -169,6 +172,7 @@ export default function SwipeScreen() {
 
   const handleSwipeLeft = useCallback(
     async (pet: Pet) => {
+      track('swipe_left', { pet_id: pet.id });
       setPets((prev) => prev.filter((p) => p.id !== pet.id));
       let swipeId: string | undefined;
       if (user) {
